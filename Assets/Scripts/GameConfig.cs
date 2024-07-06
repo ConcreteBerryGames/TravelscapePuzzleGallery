@@ -9,7 +9,7 @@ public class GameConfig : MonoBehaviour
     static GameConfig()
     {
         config = new Dictionary<int, PuzzleConfig>();
-        config.Add(1, new PuzzleConfig { easyColumns = 3, easyRows = 4, hardColumns = 4, hardRows = 6, materialName = "dupa", done = false });
+        config.Add(1, new PuzzleConfig { easyColumns = 3, easyRows = 4, hardColumns = 4, hardRows = 6, materialName = "DeadSea", done = false });
         config.Add(2, new PuzzleConfig { easyColumns = 4, easyRows = 3, hardColumns = 6, hardRows = 4, materialName = "dupa", done = false });
         config.Add(3, new PuzzleConfig { easyColumns = 4, easyRows = 3, hardColumns = 6, hardRows = 4, materialName = "dupa", done = false });
         config.Add(4, new PuzzleConfig { easyColumns = 4, easyRows = 3, hardColumns = 6, hardRows = 4, materialName = "dupa", done = false });

@@ -12,10 +12,13 @@ public class PuzzleManager : MonoBehaviour
     private int columns;
     private int rows;
     private PuzzleConfig data;
+    private Material material;
 
     private void CreateGamePieces()
-    {
+    {   
         data = GameConfig.GetPuzzleConfig(id);
+        material = Resources.Load("Materials/" + data.materialName + "Material", typeof(Material)) as Material;
+        Debug.Log(material);
         if (GameConfig.mode == "easy") {
             rows = data.easyRows;
             columns = data.easyColumns;
@@ -39,7 +42,10 @@ public class PuzzleManager : MonoBehaviour
                 piece.localPosition = new Vector3(col - (columns - 1) / 2f, -row + (rows - 1) / 2f, 1);
                 piece.name = $"{(row * columns) + col}";
 
+                piece.GetComponent<MeshRenderer>().material = material;
+
                 Mesh mesh = piece.GetComponent<MeshFilter>().mesh;
+
                 Vector2[] uv = new Vector2[4];
                 float columnsPropotion = 1f / columns;
                 float rowPropotion = 1f / rows;
@@ -62,6 +68,10 @@ public class PuzzleManager : MonoBehaviour
 
     private bool CheckCompletion()
     {
+        if (pieces.Count == 0)
+        {
+            return false;
+        }
         for (int i = 0; i < pieces.Count; i++)
         {
             if (pieces[i].name != $"{i}")
@@ -153,7 +163,6 @@ public class PuzzleManager : MonoBehaviour
 
     private void StartPuzzle()
     {
-        pieces = new List<Transform>();
         CreateGamePieces();
         StartCoroutine(WaitShuffle(0.5f));        
     }
@@ -173,5 +182,6 @@ public class PuzzleManager : MonoBehaviour
         GameEvents.current.onModeSelected += StartPuzzle;
         GameEvents.current.onBackButtonClick += ClosePuzzle;
         GameEvents.current.onGamePiceClick += MovePice;
+        pieces = new List<Transform>();
     }
 }

@@ -365,6 +365,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   piecePrefab: {fileID: 1484294200638161504, guid: 4bfdea7e52fa12348b17ecdb2625a8cd, type: 3}
   id: 1
+  material: {fileID: 2100000, guid: bc141a4c97760a34d8abad5015ba7f27, type: 2}
 --- !u!61 &585751884
 BoxCollider2D:
   m_ObjectHideFlags: 0
