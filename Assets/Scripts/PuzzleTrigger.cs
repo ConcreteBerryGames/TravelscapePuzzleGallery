@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class PuzzleTrigger : MonoBehaviour
+public class PuzzleTrigger : MonoBehaviour, IPointerClickHandler
 {
     void Start()
     {
@@ -14,7 +15,7 @@ public class PuzzleTrigger : MonoBehaviour
         gameObject.GetComponent<Collider2D>().enabled = true;
     }
 
-    void OnMouseDown()
+    public void OnPointerClick(PointerEventData pointerEventData)
     {
         gameObject.GetComponent<Collider2D>().enabled = false;
         GameEvents.current.PictureClick(gameObject);

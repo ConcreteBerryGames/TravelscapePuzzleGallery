@@ -14,6 +14,7 @@ public class GameEvents : MonoBehaviour
 
     public event Action<GameObject> onPictureClick;
     public event Action onBackButtonClick;
+    public event Action onResetButtonClick;
     public event Action onModeSelected;
     public event Action<GameObject> onGamePiceClick;
 
@@ -38,6 +39,14 @@ public class GameEvents : MonoBehaviour
         if (onBackButtonClick != null)
         {
             onBackButtonClick();
+        }
+    }
+
+    public void ResetButtonClick()
+    {
+        if (onResetButtonClick != null)
+        {
+            onResetButtonClick();
         }
     }
 

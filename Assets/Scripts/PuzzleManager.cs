@@ -16,7 +16,6 @@ public class PuzzleManager : MonoBehaviour
 
     private void CreateGamePieces()
     {   
-        data = GameConfig.GetPuzzleConfig(id);
         material = Resources.Load("Materials/" + data.materialName + "Material", typeof(Material)) as Material;
         Debug.Log(material);
         if (GameConfig.mode == "easy") {
@@ -99,6 +98,16 @@ public class PuzzleManager : MonoBehaviour
         return false;
     }
 
+    private void ShowPicture()
+    {
+        for (int i = 0; i < pieces.Count; i++)
+        {
+            pieces[i].GetComponent<Collider2D>().enabled = false;
+            pieces[i].gameObject.SetActive(true);
+            pieces[i].transform.Find("Frame").gameObject.SetActive(false);
+        }
+    }
+
     private void MovePice(GameObject pice)
     {
         for (int i = 0; i < pieces.Count; i++)
@@ -113,15 +122,7 @@ public class PuzzleManager : MonoBehaviour
                 if (SwapIfValid(i, +1, columns - 1)) { break; }
             }
         }
-        if (CheckCompletion())
-        {
-            for (int i = 0; i < pieces.Count; i++)
-            {
-                pieces[i].GetComponent<Collider2D>().enabled = false;
-                pieces[i].gameObject.SetActive(true);
-                pieces[i].transform.Find("Frame").gameObject.SetActive(false);
-            }
-        }
+        if (CheckCompletion()) ShowPicture();
     }
 
     private void Shuffle()
@@ -163,18 +164,33 @@ public class PuzzleManager : MonoBehaviour
 
     private void StartPuzzle()
     {
-        CreateGamePieces();
-        StartCoroutine(WaitShuffle(0.5f));        
+        if (GameConfig.activePuzzle == id)
+        {
+            CreateGamePieces();
+            StartCoroutine(WaitShuffle(0.5f));
+        }
     }
 
     private void ClosePuzzle()
     {
         if (CheckCompletion()) return;
+        ResetPuzzle();
+    }
+
+    private void CreateAsDone()
+    {
+        CreateGamePieces();
+        ShowPicture();
+    }
+
+    private void ResetPuzzle()
+    {
         for (int i = 0; i < gameObject.transform.childCount; i++)
         {
             Transform pice = gameObject.transform.GetChild(i);
             Destroy(pice.gameObject);
         }
+        pieces.Clear();
     }
 
     void Start()
@@ -182,6 +198,10 @@ public class PuzzleManager : MonoBehaviour
         GameEvents.current.onModeSelected += StartPuzzle;
         GameEvents.current.onBackButtonClick += ClosePuzzle;
         GameEvents.current.onGamePiceClick += MovePice;
+        GameEvents.current.onResetButtonClick += ResetPuzzle;
+        data = GameConfig.GetPuzzleConfig(id);
         pieces = new List<Transform>();
+        if (data.done) CreateAsDone();
+        
     }
 }

@@ -6,12 +6,15 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] GameObject dificultyButtons;
     [SerializeField] GameObject backButton;
+    [SerializeField] GameObject settingsPannel;
+    [SerializeField] GameObject puzzlePannel;
     void Start()
     {
-        GameConfig.mode = "easy";
         GameEvents.current.onPictureClick += ZoomToPuzzle;
         GameEvents.current.onBackButtonClick += GoToWall;
+        GameEvents.current.onBackButtonClick += ClosePuzzlePanel;
         GameEvents.current.onModeSelected += HideDificultyButtons;
+        GameEvents.current.onResetButtonClick += ClearSave;
     }
 
     private void ZoomToPuzzle(GameObject puzzle) {
@@ -54,5 +57,46 @@ public class GameManager : MonoBehaviour
         });
         yield return new WaitForSeconds(1.5f);
         Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void ClearSave()
+    {
+        GoToWall();
+        PlayerPrefs.DeleteKey("donePictures");    
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void OpenSettingsPanel()
+    {
+        settingsPannel.SetActive(true);
+    }
+
+    public void CloseSettingsPanel()
+    {
+        settingsPannel.SetActive(false);
+    }
+
+    public void OpenPuzzlePanel()
+    {
+        puzzlePannel.SetActive(true);
+    }
+
+    public void ClosePuzzlePanel()
+    {
+        puzzlePannel.SetActive(false);
+    }
+
+    public void QuitPuzzle()
+    {
+        if (GameConfig.config[GameConfig.activePuzzle].done)
+        {
+            GoToWall();
+            return;
+        }
+        OpenPuzzlePanel();
     }
 }
