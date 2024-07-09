@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class PiceClick : MonoBehaviour
+public class PiceClick : MonoBehaviour, IPointerClickHandler
 {
-    void OnMouseDown()
+    public void OnPointerClick(PointerEventData pointerEventData)
     {
         GameEvents.current.GamePiceClick(gameObject);
     }

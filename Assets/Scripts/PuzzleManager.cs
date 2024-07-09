@@ -13,6 +13,7 @@ public class PuzzleManager : MonoBehaviour
     private int rows;
     private PuzzleConfig data;
     private Material material;
+    private static AudioSource audioSource;
 
     private void CreateGamePieces()
     {   
@@ -123,10 +124,11 @@ public class PuzzleManager : MonoBehaviour
                 {
                     // Check each direction to see if valid move.
                     // We break out on success so we don't carry on and swap back again.
-                    if (SwapIfValid(i, -columns, columns, true)) { break; }
-                    if (SwapIfValid(i, +columns, columns, true)) { break; }
-                    if (SwapIfValid(i, -1, 0, true)) { break; }
-                    if (SwapIfValid(i, +1, columns - 1, true)) { break; }
+                    if (SwapIfValid(i, -columns, columns, true)) { audioSource.Play(); break; }
+                    if (SwapIfValid(i, +columns, columns, true)) { audioSource.Play(); break; }
+                    if (SwapIfValid(i, -1, 0, true)) { audioSource.Play(); break; }
+                    if (SwapIfValid(i, +1, columns - 1, true)) { audioSource.Play(); break; }
+                    
                 }
             }
             if (CheckCompletion())
@@ -212,6 +214,7 @@ public class PuzzleManager : MonoBehaviour
         GameEvents.current.onBackButtonClick += ClosePuzzle;
         GameEvents.current.onGamePiceClick += MovePice;
         GameEvents.current.onResetButtonClick += ResetPuzzle;
+        audioSource = GetComponent<AudioSource>();
         data = GameConfig.GetPuzzleConfig(id);
         pieces = new List<Transform>();
         if (data.done) CreateAsDone();
