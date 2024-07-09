@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject congratsImage;
 
     public static bool isZoomed = false;
+    private GameObject[] pictures;
+    private Color blinkColor = new Color32(200, 200, 200, 255); 
     void Start()
     {
         GameEvents.current.onPictureClick += ZoomToPuzzle;
@@ -20,6 +22,11 @@ public class GameManager : MonoBehaviour
         GameEvents.current.onModeSelected += HideDificultyButtons;
         GameEvents.current.onResetButtonClick += ClearSave;
         GameEvents.current.onPuzzleDone += ShowCongrats;
+        pictures = GameObject.FindGameObjectsWithTag("Picture");
+        foreach (GameObject picture in pictures)
+        {
+            LeanTween.color(picture, blinkColor, 1f).setLoopPingPong();
+        }
     }
 
     private void ZoomToPuzzle(GameObject puzzle) {
@@ -39,6 +46,11 @@ public class GameManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Camera camera = Camera.main;
+        foreach (GameObject picture in pictures)
+        {
+            LeanTween.cancel(picture);
+            LeanTween.color(picture, Color.white, 0.2f);
+        }
         LeanTween.move(camera.gameObject, new Vector3(puzzle.transform.position.x, puzzle.transform.position.y, 0), 1f).setEase(LeanTweenType.easeOutQuad);
         LeanTween.value(camera.gameObject, camera.orthographicSize, 1.5f, 1f).setOnUpdate((float flt) => {
             camera.orthographicSize = flt;
@@ -62,6 +74,10 @@ public class GameManager : MonoBehaviour
         LeanTween.value(camera.gameObject, camera.orthographicSize, 5f, 1f).setOnUpdate((float flt) => {
             camera.orthographicSize = flt;
         });
+        foreach (GameObject picture in pictures)
+        {
+            if (!GameConfig.config[picture.GetComponent<PuzzleManager>().id].done) LeanTween.color(picture, blinkColor, 1f).setLoopPingPong();
+        }
         yield return new WaitForSeconds(1.1f);
         Cursor.lockState = CursorLockMode.None;
     }

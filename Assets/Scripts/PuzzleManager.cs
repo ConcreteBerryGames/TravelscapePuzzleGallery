@@ -215,6 +215,5 @@ public class PuzzleManager : MonoBehaviour
         data = GameConfig.GetPuzzleConfig(id);
         pieces = new List<Transform>();
         if (data.done) CreateAsDone();
-        
     }
 }
