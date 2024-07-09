@@ -17,7 +17,6 @@ public class PuzzleManager : MonoBehaviour
     private void CreateGamePieces()
     {   
         material = Resources.Load("Materials/" + data.materialName + "Material", typeof(Material)) as Material;
-        Debug.Log(material);
         if (GameConfig.mode == "easy") {
             rows = data.easyRows;
             columns = data.easyColumns;
@@ -28,17 +27,16 @@ public class PuzzleManager : MonoBehaviour
             columns = data.hardColumns;
         }
 
-        float scale = gameObject.GetComponent<BoxCollider2D>().size.x / columns;
-        gameObject.transform.localScale = new Vector3(scale, scale, 0);
-
-
+        float scale = Mathf.Min(gameObject.GetComponent<BoxCollider2D>().size.x / columns, gameObject.GetComponent<BoxCollider2D>().size.y / rows);
         for (int row = 0; row < rows; row++)
         {
             for (int col = 0; col < columns; col++)
             {
                 Transform piece = Instantiate(piecePrefab, gameObject.transform);
                 pieces.Add(piece);
-                piece.localPosition = new Vector3(col - (columns - 1) / 2f, -row + (rows - 1) / 2f, 1);
+                
+                piece.localPosition = new Vector3(col - (columns - 1) / 2f, -row + (rows - 1) / 2f, -1)* scale;
+                piece.localScale = Vector3.one * scale;
                 piece.name = $"{(row * columns) + col}";
 
                 piece.GetComponent<MeshRenderer>().material = material;
@@ -78,19 +76,26 @@ public class PuzzleManager : MonoBehaviour
                 return false;
             }
         }
-        GameConfig.SetAsDone(id);
         return true;
     }
 
 
-    private bool SwapIfValid(int i, int offset, int colCheck)
+    private bool SwapIfValid(int i, int offset, int colCheck, bool animate = false)
     {
         if (((i % columns) != colCheck) && ((i + offset) == emptyLocation))
         {
             // Swap them in game state.
             (pieces[i], pieces[i + offset]) = (pieces[i + offset], pieces[i]);
             // Swap their transforms.
-            (pieces[i].localPosition, pieces[i + offset].localPosition) = ((pieces[i + offset].localPosition, pieces[i].localPosition));
+            if (!animate)
+            {
+                (pieces[i].localPosition, pieces[i + offset].localPosition) = ((pieces[i + offset].localPosition, pieces[i].localPosition));
+            }
+            else {
+                Vector3 target = pieces[i].localPosition;
+                pieces[i].localPosition = pieces[i + offset].localPosition;
+                LeanTween.moveLocal(pieces[i + offset].gameObject, target, 0.2f);
+            }
             // Update empty location.
             emptyLocation = i;
             return true;
@@ -110,19 +115,27 @@ public class PuzzleManager : MonoBehaviour
 
     private void MovePice(GameObject pice)
     {
-        for (int i = 0; i < pieces.Count; i++)
+        if (pieces.Contains(pice.transform))
         {
-            if (pieces[i] == pice.transform)
+            for (int i = 0; i < pieces.Count; i++)
             {
-                // Check each direction to see if valid move.
-                // We break out on success so we don't carry on and swap back again.
-                if (SwapIfValid(i, -columns, columns)) { break; }
-                if (SwapIfValid(i, +columns, columns)) { break; }
-                if (SwapIfValid(i, -1, 0)) { break; }
-                if (SwapIfValid(i, +1, columns - 1)) { break; }
+                if (pieces[i] == pice.transform)
+                {
+                    // Check each direction to see if valid move.
+                    // We break out on success so we don't carry on and swap back again.
+                    if (SwapIfValid(i, -columns, columns, true)) { break; }
+                    if (SwapIfValid(i, +columns, columns, true)) { break; }
+                    if (SwapIfValid(i, -1, 0, true)) { break; }
+                    if (SwapIfValid(i, +1, columns - 1, true)) { break; }
+                }
+            }
+            if (CheckCompletion())
+            {
+                GameConfig.SetAsDone(id);
+                GameEvents.current.PuzzleDone();
+                ShowPicture();
             }
         }
-        if (CheckCompletion()) ShowPicture();
     }
 
     private void Shuffle()

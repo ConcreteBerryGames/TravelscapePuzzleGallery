@@ -17,6 +17,7 @@ public class GameEvents : MonoBehaviour
     public event Action onResetButtonClick;
     public event Action onModeSelected;
     public event Action<GameObject> onGamePiceClick;
+    public event Action onPuzzleDone;
 
     public void GamePiceClick(GameObject clickedPice)
     {
@@ -55,6 +56,14 @@ public class GameEvents : MonoBehaviour
         if (onModeSelected != null)
         {
             onModeSelected();
+        }
+    }
+
+    public void PuzzleDone()
+    {
+        if (onPuzzleDone != null)
+        {
+            onPuzzleDone();
         }
     }
 }

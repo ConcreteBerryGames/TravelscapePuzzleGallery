@@ -5,20 +5,11 @@ using UnityEngine.EventSystems;
 
 public class PuzzleTrigger : MonoBehaviour, IPointerClickHandler
 {
-    void Start()
-    {
-        GameEvents.current.onBackButtonClick += EnableColider;
-    }
-
-    private void EnableColider()
-    {
-        gameObject.GetComponent<Collider2D>().enabled = true;
-    }
-
     public void OnPointerClick(PointerEventData pointerEventData)
     {
-        gameObject.GetComponent<Collider2D>().enabled = false;
-        GameEvents.current.PictureClick(gameObject);
+        if (!GameManager.isZoomed)
+        {
+            GameEvents.current.PictureClick(gameObject);
+        }
     }
-
 }

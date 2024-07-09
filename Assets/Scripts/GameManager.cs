@@ -8,6 +8,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject backButton;
     [SerializeField] GameObject settingsPannel;
     [SerializeField] GameObject puzzlePannel;
+    [SerializeField] GameObject congratsPannel;
+    [SerializeField] GameObject congratsImage;
+
+    public static bool isZoomed = false;
     void Start()
     {
         GameEvents.current.onPictureClick += ZoomToPuzzle;
@@ -15,14 +19,17 @@ public class GameManager : MonoBehaviour
         GameEvents.current.onBackButtonClick += ClosePuzzlePanel;
         GameEvents.current.onModeSelected += HideDificultyButtons;
         GameEvents.current.onResetButtonClick += ClearSave;
+        GameEvents.current.onPuzzleDone += ShowCongrats;
     }
 
     private void ZoomToPuzzle(GameObject puzzle) {
         StartCoroutine(GoToPuzzle(puzzle));
+        isZoomed = true;
     }
 
     private void GoToWall() {
         StartCoroutine(OutOfPuzzle());
+        isZoomed = false;
     }
 
     private void HideDificultyButtons() {
@@ -55,14 +62,15 @@ public class GameManager : MonoBehaviour
         LeanTween.value(camera.gameObject, camera.orthographicSize, 5f, 1f).setOnUpdate((float flt) => {
             camera.orthographicSize = flt;
         });
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.1f);
         Cursor.lockState = CursorLockMode.None;
     }
 
     public void ClearSave()
     {
-        GoToWall();
-        PlayerPrefs.DeleteKey("donePictures");    
+        PlayerPrefs.DeleteKey("donePictures");
+        GoToWall();        
+        CloseSettingsPanel();
     }
 
     public void QuitGame()
@@ -92,11 +100,29 @@ public class GameManager : MonoBehaviour
 
     public void QuitPuzzle()
     {
-        if (GameConfig.config[GameConfig.activePuzzle].done)
+        if (GameConfig.config[GameConfig.activePuzzle].done || dificultyButtons.activeSelf)
         {
             GoToWall();
             return;
         }
         OpenPuzzlePanel();
+    }
+
+    void ShowCongrats() {
+        StartCoroutine(Congrats());
+    }
+
+    IEnumerator Congrats()
+    {
+        congratsPannel.SetActive(true);
+        RectTransform image = congratsImage.GetComponent<UnityEngine.UI.Image>().rectTransform;
+        LeanTween.alpha(image, 1f, .3f).setEase(LeanTweenType.easeInCirc);
+        LeanTween.scale(image, Vector3.one*1.2f, .3f).setEase(LeanTweenType.easeInCirc);
+        yield return new WaitForSeconds(0.3f);
+        LeanTween.scale(image, Vector3.one, .3f).setEase(LeanTweenType.easeOutCirc);
+        yield return new WaitForSeconds(1.3f);
+        LeanTween.alpha(image, 0, .3f).setEase(LeanTweenType.easeInCirc);
+        yield return new WaitForSeconds(0.3f);
+        congratsPannel.SetActive(false);
     }
 }

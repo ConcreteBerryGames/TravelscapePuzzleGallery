@@ -58,7 +58,6 @@ public class GameConfig : MonoBehaviour
 
     void Awake() {
         GameConfig.mode = "easy";
-        Debug.Log("done: " + PlayerPrefs.GetString("donePictures"));
         string[] done = PlayerPrefs.GetString("donePictures").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
         for (int i = 0; i < done.Length; i++)
         {
