@@ -35,7 +35,7 @@ public class PuzzleManager : MonoBehaviour
                 Transform piece = Instantiate(piecePrefab, gameObject.transform);
                 pieces.Add(piece);
                 
-                piece.localPosition = new Vector3(col - (columns - 1) / 2f, -row + (rows - 1) / 2f, -1)* scale;
+                piece.localPosition = new Vector3((col - (columns - 1) / 2f) * scale, (-row + (rows - 1) / 2f) * scale, -0.2f);
                 piece.localScale = Vector3.one * scale;
                 piece.name = $"{(row * columns) + col}";
 

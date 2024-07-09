@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
         pictures = GameObject.FindGameObjectsWithTag("Picture");
         foreach (GameObject picture in pictures)
         {
-            LeanTween.color(picture, blinkColor, 1f).setLoopPingPong();
+            if (!GameConfig.config[picture.GetComponent<PuzzleManager>().id].done) LeanTween.color(picture, blinkColor, 1f).setLoopPingPong();
         }
     }
 
