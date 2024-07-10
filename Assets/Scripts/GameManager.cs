@@ -137,8 +137,8 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         LeanTween.scale(image, Vector3.one, .3f).setEase(LeanTweenType.easeOutCirc);
         yield return new WaitForSeconds(1.3f);
-        LeanTween.alpha(image, 0, .3f).setEase(LeanTweenType.easeInCirc);
-        yield return new WaitForSeconds(0.3f);
+        LeanTween.alpha(image, 0, 0.5f).setEase(LeanTweenType.easeInCirc);
+        yield return new WaitForSeconds(0.6f);
         congratsPannel.SetActive(false);
     }
 }
