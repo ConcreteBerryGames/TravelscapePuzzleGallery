@@ -43,18 +43,18 @@ public class GameConfig : MonoBehaviour
 
     void Awake() {
         config = new Dictionary<int, PuzzleConfig>();
-        config.Add(1, new PuzzleConfig { easyColumns = 3, easyRows = 4, hardColumns = 4, hardRows = 6, materialName = "Desert", done = false });
-        config.Add(2, new PuzzleConfig { easyColumns = 3, easyRows = 2, hardColumns = 6, hardRows = 4, materialName = "DeadSea", done = false });
-        config.Add(3, new PuzzleConfig { easyColumns = 3, easyRows = 3, hardColumns = 4, hardRows = 4, materialName = "AbuDhabi", done = false });
-        config.Add(4, new PuzzleConfig { easyColumns = 3, easyRows = 3, hardColumns = 4, hardRows = 4, materialName = "Alps", done = false });
-        config.Add(5, new PuzzleConfig { easyColumns = 4, easyRows = 3, hardColumns = 5, hardRows = 4, materialName = "Cappadocia", done = false });
-        config.Add(6, new PuzzleConfig { easyColumns = 3, easyRows = 2, hardColumns = 6, hardRows = 4, materialName = "Masada", done = false });
-        config.Add(7, new PuzzleConfig { easyColumns = 3, easyRows = 2, hardColumns = 6, hardRows = 4, materialName = "Madeira", done = false });
-        config.Add(8, new PuzzleConfig { easyColumns = 2, easyRows = 3, hardColumns = 3, hardRows = 4, materialName = "Iceland", done = false });
-        config.Add(9, new PuzzleConfig { easyColumns = 2, easyRows = 3, hardColumns = 3, hardRows = 4, materialName = "Piza", done = false });
-        config.Add(10, new PuzzleConfig { easyColumns = 3, easyRows = 2, hardColumns = 4, hardRows = 3, materialName = "Trail", done = false });
-        config.Add(11, new PuzzleConfig { easyColumns = 3, easyRows = 2, hardColumns = 4, hardRows = 3, materialName = "Giorgia", done = false });
-        config.Add(12, new PuzzleConfig { easyColumns = 3, easyRows = 3, hardColumns = 4, hardRows = 4, materialName = "AbuDhabi2", done = false });
+        config.Add(1, new PuzzleConfig { easyColumns = 3, easyRows = 4, hardColumns = 4, hardRows = 6, materialName = "Desert", done = false, camera = 1.5f });
+        config.Add(2, new PuzzleConfig { easyColumns = 4, easyRows = 3, hardColumns = 5, hardRows = 4, materialName = "DeadSea", done = false, camera = 1.5f });
+        config.Add(3, new PuzzleConfig { easyColumns = 4, easyRows = 4, hardColumns = 5, hardRows = 5, materialName = "AbuDhabi", done = false, camera = 1.5f });
+        config.Add(4, new PuzzleConfig { easyColumns = 4, easyRows = 4, hardColumns = 5, hardRows = 5, materialName = "Alps", done = false, camera = 1.5f });
+        config.Add(5, new PuzzleConfig { easyColumns = 4, easyRows = 3, hardColumns = 6, hardRows = 4, materialName = "Cappadocia", done = false, camera = 1.5f });
+        config.Add(6, new PuzzleConfig { easyColumns = 4, easyRows = 3, hardColumns = 6, hardRows = 4, materialName = "Masada", done = false, camera = 0.8f });
+        config.Add(7, new PuzzleConfig { easyColumns = 4, easyRows = 3, hardColumns = 6, hardRows = 4, materialName = "Madeira", done = false, camera = 0.8f });
+        config.Add(8, new PuzzleConfig { easyColumns = 3, easyRows = 4, hardColumns = 4, hardRows = 6, materialName = "Iceland", done = false, camera = 1.5f });
+        config.Add(9, new PuzzleConfig { easyColumns = 3, easyRows = 4, hardColumns = 4, hardRows = 6, materialName = "Piza", done = false, camera = 1.5f });
+        config.Add(10, new PuzzleConfig { easyColumns = 4, easyRows = 3, hardColumns = 6, hardRows = 4, materialName = "Trail", done = false, camera = 0.8f });
+        config.Add(11, new PuzzleConfig { easyColumns = 4, easyRows = 3, hardColumns = 6, hardRows = 4, materialName = "Giorgia", done = false, camera = 0.8f });
+        config.Add(12, new PuzzleConfig { easyColumns = 4, easyRows = 4, hardColumns = 5, hardRows = 5, materialName = "AbuDhabi2", done = false, camera = 1.5f });
         GameConfig.mode = "easy";
         string[] done = PlayerPrefs.GetString("donePictures").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
         for (int i = 0; i < done.Length; i++)
@@ -78,4 +78,5 @@ public class PuzzleConfig
     public int hardRows;
     public string materialName;
     public bool done;
+    public float camera;
 }
