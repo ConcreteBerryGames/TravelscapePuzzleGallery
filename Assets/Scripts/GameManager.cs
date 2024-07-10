@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator GoToPuzzle(GameObject puzzle)
     {
+        PuzzleConfig currentPuzzle = GameConfig.GetPuzzleConfig(puzzle.GetComponent<PuzzleManager>().id);
         Cursor.lockState = CursorLockMode.Locked;
         foreach (GameObject picture in pictures)
         {
@@ -50,12 +51,12 @@ public class GameManager : MonoBehaviour
             LeanTween.color(picture, Color.white, 0.2f);
         }
         LeanTween.move(camera.gameObject, new Vector3(puzzle.transform.position.x, puzzle.transform.position.y, 0), 1f).setEase(LeanTweenType.easeOutQuad);
-        LeanTween.value(camera.gameObject, camera.orthographicSize, 1.5f, 1f).setOnUpdate((float flt) => {
+        LeanTween.value(camera.gameObject, camera.orthographicSize, currentPuzzle.camera, 1f).setOnUpdate((float flt) => {
             camera.orthographicSize = flt;
         });
         yield return new WaitForSeconds(1.5f);
         Cursor.lockState = CursorLockMode.None;
-        if (!GameConfig.GetPuzzleConfig(puzzle.GetComponent<PuzzleManager>().id).done)
+        if (!currentPuzzle.done)
         {
             dificultyButtons.SetActive(true);
         }
@@ -73,7 +74,7 @@ public class GameManager : MonoBehaviour
         });
         foreach (GameObject picture in pictures)
         {
-            if (!GameConfig.config[picture.GetComponent<PuzzleManager>().id].done) LeanTween.color(picture, blinkColor, 1f).setLoopPingPong();
+            if (!GameConfig.GetPuzzleConfig(picture.GetComponent<PuzzleManager>().id).done) LeanTween.color(picture, blinkColor, 1f).setLoopPingPong();
         }
         yield return new WaitForSeconds(1.1f);
         Cursor.lockState = CursorLockMode.None;
