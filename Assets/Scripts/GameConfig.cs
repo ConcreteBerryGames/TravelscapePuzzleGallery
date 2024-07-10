@@ -23,6 +23,7 @@ public class GameConfig : MonoBehaviour
         config.Add(9, new PuzzleConfig { easyColumns = 2, easyRows = 3, hardColumns = 3, hardRows = 4, materialName = "Piza", done = false });
         config.Add(10, new PuzzleConfig { easyColumns = 3, easyRows = 2, hardColumns = 4, hardRows = 3, materialName = "Trail", done = false });
         config.Add(11, new PuzzleConfig { easyColumns = 3, easyRows = 2, hardColumns = 4, hardRows = 3, materialName = "Giorgia", done = false });
+        config.Add(12, new PuzzleConfig { easyColumns = 3, easyRows = 3, hardColumns = 4, hardRows = 4, materialName = "AbuDhabi2", done = false });
     }
 
     public static PuzzleConfig GetPuzzleConfig(int id)
