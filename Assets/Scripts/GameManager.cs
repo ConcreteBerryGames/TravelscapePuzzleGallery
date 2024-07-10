@@ -10,10 +10,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject puzzlePannel;
     [SerializeField] GameObject congratsPannel;
     [SerializeField] GameObject congratsImage;
+    [SerializeField] GameObject background;
 
     public static bool isZoomed = false;
     private GameObject[] pictures;
-    private Color blinkColor = new Color32(200, 200, 200, 255); 
+    private Color blinkColor = new Color32(200, 200, 200, 255);
+    private Camera camera;
     void Start()
     {
         GameEvents.current.onPictureClick += ZoomToPuzzle;
@@ -22,11 +24,8 @@ public class GameManager : MonoBehaviour
         GameEvents.current.onModeSelected += HideDificultyButtons;
         GameEvents.current.onResetButtonClick += ClearSave;
         GameEvents.current.onPuzzleDone += ShowCongrats;
-        pictures = GameObject.FindGameObjectsWithTag("Picture");
-        foreach (GameObject picture in pictures)
-        {
-            if (!GameConfig.config[picture.GetComponent<PuzzleManager>().id].done) LeanTween.color(picture, blinkColor, 1f).setLoopPingPong();
-        }
+        camera = Camera.main;
+        StartCoroutine(Intro());
     }
 
     private void ZoomToPuzzle(GameObject puzzle) {
@@ -45,7 +44,6 @@ public class GameManager : MonoBehaviour
     IEnumerator GoToPuzzle(GameObject puzzle)
     {
         Cursor.lockState = CursorLockMode.Locked;
-        Camera camera = Camera.main;
         foreach (GameObject picture in pictures)
         {
             LeanTween.cancel(picture);
@@ -69,7 +67,6 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         dificultyButtons.SetActive(false);
         backButton.SetActive(false);
-        Camera camera = Camera.main;
         LeanTween.move(camera.gameObject, new Vector3(0, 0, 0), 1f).setEase(LeanTweenType.easeOutQuad);
         LeanTween.value(camera.gameObject, camera.orthographicSize, 5f, 1f).setOnUpdate((float flt) => {
             camera.orthographicSize = flt;
@@ -140,5 +137,22 @@ public class GameManager : MonoBehaviour
         LeanTween.alpha(image, 0, 0.5f).setEase(LeanTweenType.easeInCirc);
         yield return new WaitForSeconds(0.6f);
         congratsPannel.SetActive(false);
+    }
+
+    IEnumerator Intro()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        LeanTween.alpha(background, 1f, 1.2f).setEase(LeanTweenType.easeInCirc);
+        yield return new WaitForSeconds(2.5f);
+        LeanTween.value(camera.gameObject, camera.orthographicSize, 5f, 2f).setOnUpdate((float flt) => {
+            camera.orthographicSize = flt;
+        });
+        yield return new WaitForSeconds(2.1f);
+        pictures = GameObject.FindGameObjectsWithTag("Picture");
+        foreach (GameObject picture in pictures)
+        {
+            if (!GameConfig.config[picture.GetComponent<PuzzleManager>().id].done) LeanTween.color(picture, blinkColor, 1f).setLoopPingPong();
+        }
+        Cursor.lockState = CursorLockMode.None;
     }
 }

@@ -1138,7 +1138,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 1.37
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1796,7 +1796,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 796fcd990dc0e9e4bb19bc2a8f025e36, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3791,6 +3791,7 @@ MonoBehaviour:
   puzzlePannel: {fileID: 170511068}
   congratsPannel: {fileID: 1473748187}
   congratsImage: {fileID: 466879575}
+  background: {fileID: 841845871}
 --- !u!114 &1545941997
 MonoBehaviour:
   m_ObjectHideFlags: 0
